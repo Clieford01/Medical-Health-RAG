@@ -1,0 +1,458 @@
+/* 1. RESET TOTAL & STREAMLIT OVERRIDE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Menghapus semua celah bawaan browser dan Streamlit */
+html, body, [data-testid="stAppViewContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100%;
+    background-color: #05030d;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+}
+
+/* Memaksa kontainer utama Streamlit untuk rapat ke atas */
+.block-container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Menghilangkan header default Streamlit agar tidak menutupi navbar custom */
+header {
+    visibility: hidden;
+    height: 0;
+}
+
+/* 2. LAYOUT ENGINE */
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 245vh;
+}
+
+/* 3. NAVBAR (MENTOK KE ATAS) */
+.navbar {
+    position: fixed; /* Mengunci posisi di layar */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    padding: 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #05030d; /* Sama dengan Footer */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    z-index: 9999;
+
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Gerakan halus */
+    transform: translateY(-75px); /* Menyembunyikan navbar ke atas (sisakan 5px untuk deteksi) */
+    opacity: 0; /* Membuat navbar tidak terlihat */
+}
+/* GANTI KODE YANG KAMU TANYAKAN DENGAN INI */
+
+/* 1. Kita buat sensor tipis (20px) di paling atas */
+.navbar-sensor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 65px; 
+    z-index: 9998;
+    background: transparent;
+}
+
+/* 2. Pemicu yang benar: HANYA saat sensor disentuh ATAU navbar disentuh */
+.navbar-sensor:hover + .navbar,
+.navbar:hover {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto;
+}
+
+
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-box {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+    border-radius: 4px;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
+
+.nav-right a {
+    text-decoration: none;
+    color: #94a3b8;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-right a:hover {
+    color: white;
+}
+
+/* 4. HERO SECTION (PUSAT CAHAYA) */
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 80px; /* Jarak agar tidak tertutup navbar fixed */
+    /* Efek Glow Ungu */
+    background: radial-gradient(circle at center, rgba(124, 58, 237, 0.12) 0%, rgba(5, 3, 13, 0) 70%);
+}
+
+.hero h1 {
+    font-size: 64px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+    /* Memastikan tidak ada interaksi kursor */
+    pointer-events: none; 
+}
+
+/* Tambahan: Paksa sembunyi semua link di dalam hero jika masih bandel */
+.hero-content a {
+    text-decoration: none !important;
+}
+
+
+/* 5. BUTTONS */
+.cta {
+    background: #7c3aed;
+    color: white !important; /* Paksa warna putih terang */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    opacity: 1 !important; /* Pastikan tidak transparan */
+}
+
+.cta:hover {
+    background: #6d28d9; /* Hanya warna background yang berubah gelap sedikit */
+    color: white !important; /* Tetap putih terang saat ditekan/hover */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+}
+
+/* 6. FOOTER (WARNA SAMA DENGAN NAVBAR) */
+.footer {
+    padding: 80px 60px;
+    background-color: #05030d; /* Identik dengan Navbar */
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Styling teks informasi (tidak bisa diklik) */
+.footer-info {
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.6;
+    display: block;
+}
+
+/* Pastikan footer-left rata kiri */
+.footer-left {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-link-wa {
+    color: #84aef3 !important; /* Paksa warna putih terang */
+    font-size: 14px;
+    line-height: 2.0;
+    text-decoration: none !important; /* Hapus garis bawah biru */
+    display: block;
+    transition: 0.3s ease;
+}
+
+.footer-link-wa:hover {
+    color: #3b82f6 !important; /* Paksa warna biru saat disentuh */
+    transform: translateX(5px);
+}
+
+
+
+/* 7. NEWSLETTER */
+.newsletter {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.newsletter input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    width: 240px;
+    outline: none;
+}
+
+.newsletter button {
+    background: #7c3aed;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 8. LINKS FOOTER - TEKS KLIK BIASA */
+.footer-right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.footer-title {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+/* Style teks link agar mirip seperti tag p awal */
+.footer-link {
+    color: #84aef3 !important;
+    font-size: 14px;
+    text-decoration: none; /* Menghilangkan garis bawah */
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.footer-link:hover {
+    color: #3b82f6 !important; /* Paksa warna biru saat disentuh */
+    transform: translateX(0px);
+}
+
+/* Sembunyikan paksa anchor link Streamlit */
+.footer-right h4 a, .footer-right h4 span {
+    display: none !important;
+}
+
+/* --- SEMUA KODE SEBELUMNYA TETAP ADA --- */
+
+/* 9. ABOUT US SECTION */
+.about-section {
+    padding: 100px 60px;
+    background-color: rgba(255, 255, 255, 0.02); 
+    text-align: center;
+}
+
+.about-title {
+    font-size: 32px;
+    margin-bottom: 50px;
+    font-weight: bold; /* Tambahkan ini agar setebal h2 */
+    display: block;    /* Memastikan div mengambil satu baris penuh */
+}
+
+/* Kunci 5 Kolom Berjejer */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* MEWAJIBKAN 5 KOLOM */
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.photo-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow: hidden; /* Tambahkan ini agar foto tidak keluar jalur */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-card {
+    /* 1. Background transparan (putih sangat tipis) */
+    background: rgba(255, 255, 255, 0.05); 
+    
+    /* 2. Efek Blur Kaca */
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); /* Support Safari */
+    
+    /* 3. Finishing agar terlihat premium */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 15px;
+    padding: 20px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.team-info p {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5; /* Saya perbaiki dari 0.5 agar tidak tumpang tindih */
+    text-align: left;
+}
+
+
+.team-img {
+    width: 100%;
+    height: 100%;
+    /* KUNCI UTAMA: zoom & crop otomatis */
+    object-fit: cover; 
+    /* Memastikan wajah/tengah foto tetap terlihat */
+    object-position: center; 
+    display: block;
+}
+
+/* Menghilangkan tombol salin/anchor link di seluruh nama tim */
+.team-info h4 a {
+    display: none !important;
+}
+
+/* Memastikan teks h4 benar-benar bersih tanpa gangguan margin dari anchor */
+.team-info h4 {
+    position: relative;
+    pointer-events: none; /* Mencegah munculnya ikon saat di-hover */
+    text-align: center;
+    width: 100%;
+}
+
+/* =========================================
+   10. RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================= */
+
+/* --- TABLET (Lebar layar di bawah 1024px) --- */
+@media (max-width: 1024px) {
+    .navbar, .footer, .about-section {
+        padding: 0 30px; /* Kurangi padding samping */
+    }
+
+    .hero h1 {
+        font-size: 48px; /* Kecilkan judul hero */
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(3, 1fr); /* Tampilkan 3 kolom saja */
+    }
+}
+
+/* --- HP (Lebar layar di bawah 768px) --- */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 20px;
+        height: 60px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    /* Kartu Tim jadi 1 kolom (berderet ke bawah) */
+    .team-grid {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+
+    .team-card {
+        align-items: center; /* Kembali ke tengah agar rapi di HP */
+        text-align: center;
+    }
+
+    .team-info p {
+        text-align: center;
+    }
+
+    /* Footer jadi satu kolom ke bawah */
+    .footer {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .footer-left, .footer-right {
+        text-align: center;
+        align-items: center;
+    }
+
+    /* Daftar Jurnal di view.py */
+    .jurnal-box {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .jurnal-info {
+        padding-right: 0;
+    }
+}
+
+    [data-testid="stSidebar"] {
+        display: none !important;
+    }
+
