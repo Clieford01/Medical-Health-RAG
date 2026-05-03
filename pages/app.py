@@ -1,6 +1,5 @@
 import streamlit as st
 from pathlib import Path
-from langchain_ollama import ChatOllama
 from pages.rag_engine import HybridMedicalRAG
 
 # Disclaimer sadiki jadi kwa ini bagian senitive jangan talalu banya kore disni
