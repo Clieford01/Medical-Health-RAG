@@ -7,7 +7,7 @@ from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 
 from pages.prompts.chat_prompts import (
@@ -27,21 +27,30 @@ load_dotenv()
 
 class HybridMedicalRAG:
     def __init__(self):
-        self.model_name = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
-        self.base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        self.model_name = os.getenv("MODEL_NAME", "openai/gpt-4o-mini")
         self.data_path = Path(os.getenv("DATA_PATH", "./data/raw"))
         self.db_path = Path(os.getenv("CHROMA_PATH", "./data/chroma_db"))
 
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'}
-        )
-        self.llm = ChatOllama(
-            model=self.model_name,
-            temperature=0,
-            base_url=self.base_url
+        if os.getenv("RESET_DB", "false") == "true":
+            if self.db_path.exists():
+                shutil.rmtree(self.db_path)
+            
+        api_key = os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY not found")
+
+        os.environ["OPENAI_API_KEY"] = api_key
+
+        self.embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small"
         )
 
+        self.llm = ChatOpenAI(
+            model=self.model_name,
+            base_url="https://api.koboillm.com/v1",
+            temperature=0,
+        )
         self.vectorstore = self._load_or_build_vectorstore()
         
         # Chat history untuk context
